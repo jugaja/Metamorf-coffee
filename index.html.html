@@ -1,0 +1,2841 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Penjualan - METAMORF COFFEE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Kode CSS sebelumnya tetap sama */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2691E;
+            --accent: #FFD700;
+            --light: #F5F5DC;
+            --dark: #3E2723;
+            --success: #2E7D32;
+            --danger: #C62828;
+            --info: #0277BD;
+            --coffee: #6F4E37;
+            --non-coffee: #4CAF50;
+            --snack: #FF9800;
+        }
+
+        body {
+            background: #F9F5F0;
+            color: var(--dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8B4513 0%, #3E2723 100%);
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-logo i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .login-logo h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.2);
+        }
+
+        .login-error {
+            color: var(--danger);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* Dashboard - Hide by default */
+        .dashboard-container {
+            display: none;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .logo-tagline {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .date-display {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Container utama */
+        .dashboard-main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) {
+            .dashboard-main {
+                grid-template-columns: 280px 1fr;
+                gap: 25px;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        @media (min-width: 992px) {
+            .sidebar {
+                position: sticky;
+                top: 100px;
+            }
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 12px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .menu-item {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .menu-item.coffee {
+            border-left-color: var(--coffee);
+        }
+
+        .menu-item.non-coffee {
+            border-left-color: var(--non-coffee);
+        }
+
+        .menu-item.snack {
+            border-left-color: var(--snack);
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+        }
+
+        .item-prices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+
+        .price-tag {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .price-tag.medium {
+            color: var(--primary);
+        }
+
+        .price-tag.large {
+            color: var(--secondary);
+        }
+
+        .item-stats {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Konten utama */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Statistik */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .stat-card.total::before {
+            background: var(--success);
+        }
+
+        .stat-card.today::before {
+            background: var(--info);
+        }
+
+        .stat-card.average::before {
+            background: var(--accent);
+        }
+
+        .stat-card.best::before {
+            background: var(--danger);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .total .stat-icon {
+            background: var(--success);
+        }
+
+        .today .stat-icon {
+            background: var(--info);
+        }
+
+        .average .stat-icon {
+            background: var(--accent);
+        }
+
+        .best .stat-icon {
+            background: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* Charts */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-btn {
+            background: var(--light);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chart-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .chart-wrapper {
+            height: 250px;
+            position: relative;
+        }
+
+        /* Form input penjualan */
+        .input-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sale-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 576px) {
+            .sale-form {
+                grid-template-columns: 2fr 1fr 1fr auto;
+                align-items: end;
+            }
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+        }
+
+        .cart-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light);
+        }
+
+        .cart-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 576px) {
+            .cart-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .cart-title {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .cart-total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart-items {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #F9F9F9;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .cart-item-details {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .cart-item-remove {
+            background: rgba(198, 40, 40, 0.1);
+            color: var(--danger);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-remove:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Riwayat penjualan */
+        .history-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .history-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .history-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--light);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .history-table-container {
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        .history-table thead {
+            background: var(--light);
+        }
+
+        .history-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid #E0E0E0;
+            font-size: 0.9rem;
+        }
+
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 0.9rem;
+        }
+
+        .history-table tbody tr:hover {
+            background: #F9F9F9;
+        }
+
+        .item-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-coffee {
+            background: rgba(111, 78, 55, 0.1);
+            color: var(--coffee);
+        }
+
+        .badge-non-coffee {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--non-coffee);
+        }
+
+        .badge-snack {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--snack);
+        }
+
+        .delete-btn {
+            background: rgba(198, 40, 40, 0.1);
+            color: var(--danger);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 1px solid #E0E0E0;
+            margin-top: 30px;
+            background: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 0.95rem;
+        }
+
+        .summary-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--light);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            
+            .date-display {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+        
+        /* Tambahan untuk fitur baru */
+        .discount-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid var(--info);
+        }
+        
+        .stock-warning {
+            background: rgba(255, 152, 0, 0.1);
+            border-left-color: var(--snack);
+        }
+        
+        .stock-low {
+            background: rgba(198, 40, 40, 0.1);
+            border-left-color: var(--danger);
+        }
+        
+        .user-switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .admin-badge {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <div class="login-logo">
+                <i class="fas fa-coffee"></i>
+                <h1>METAMORF COFFEE</h1>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">Dashboard Penjualan</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                
+                <div class="login-error" id="loginError"></div>
+                
+                <div style="margin-top: 20px; font-size: 0.85rem; color: #666; text-align: center;">
+                    <p>Default login:</p>
+                    <p><strong>Username:</strong> admin</p>
+                    <p><strong>Password:</strong> password123</p>
+                    <p><small>Gunakan <strong>admin</strong> untuk akses data semua user</small></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-coffee"></i>
+                    </div>
+                    <div>
+                        <div class="logo-text">METAMORF COFFEE</div>
+                        <div class="logo-tagline">Dashboard Penjualan Harian</div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="date-display">
+                        <i class="far fa-calendar"></i>
+                        <span id="currentDate">Loading...</span>
+                    </div>
+                    
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-switch" id="userSwitch" style="display: none;">
+                            <select id="viewAsUser" class="form-control" style="padding: 5px 10px; font-size: 0.85rem;">
+                                <option value="all">Semua User</option>
+                            </select>
+                            <span class="admin-badge">Admin</span>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Container Utama -->
+        <div class="dashboard-main">
+            <!-- Sidebar Menu -->
+            <aside class="sidebar">
+                <h2 class="sidebar-title">
+                    <i class="fas fa-mug-hot"></i> Menu & Harga
+                </h2>
+                
+                <div class="menu-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-coffee"></i> Coffee
+                    </h3>
+                    <div id="coffeeMenu">
+                        <!-- Menu coffee akan diisi dengan JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-glass-whiskey"></i> Non-Coffee
+                    </h3>
+                    <div id="nonCoffeeMenu">
+                        <!-- Menu non-coffee akan diisi dengan JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3 class="category-title">
+                        <i class="fas fa-utensils"></i> Snack
+                    </h3>
+                    <div id="snackMenu">
+                        <!-- Menu snack akan diisi dengan JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Notifikasi Stok Rendah -->
+                <div id="stockNotifications" style="margin-top: 20px;"></div>
+                
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid var(--light);">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-chart-line"></i> Quick Stats
+                    </h3>
+                    <div style="font-size: 0.85rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Menu Terpopuler:</span>
+                            <span id="popularItem" style="font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Rata-rata Transaksi:</span>
+                            <span id="avgTransaction" style="font-weight: 600;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Total Transaksi:</span>
+                            <span id="totalTransactions" style="font-weight: 600;">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Data dari:</span>
+                            <span id="dataSource" style="font-weight: 600; color: var(--primary);">User saat ini</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Konten Utama -->
+            <main class="main-content">
+                <!-- Statistik -->
+                <section class="stats-grid">
+                    <div class="stat-card total">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="totalRevenue">Rp 0</div>
+                                <div class="stat-label" id="totalRevenueLabel">Total Omset</div>
+                            </div>
+                            <div class="stat-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card today">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="todayRevenue">Rp 0</div>
+                                <div class="stat-label">Omset Hari Ini</div>
+                            </div>
+                            <div class="stat-icon">
+                                <i class="fas fa-sun"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card average">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="avgDaily">Rp 0</div>
+                                <div class="stat-label">Rata-rata Harian</div>
+                            </div>
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card best">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="transactionCount">0</div>
+                                <div class="stat-label">Transaksi Hari Ini</div>
+                            </div>
+                            <div class="stat-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grafik -->
+                <section class="charts-container">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Penjualan 7 Hari Terakhir</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn" onclick="changeChartPeriod('week')">7 Hari</button>
+                                <button class="chart-btn" onclick="changeChartPeriod('month')">30 Hari</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Penjualan per Kategori</h3>
+                            <div class="chart-actions">
+                                <button class="chart-btn" onclick="changeChartType('doughnut')">Donat</button>
+                                <button class="chart-btn" onclick="changeChartType('pie')">Pie</button>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Input Penjualan -->
+                <section class="input-card">
+                    <h2 class="input-title">
+                        <i class="fas fa-cash-register"></i> Input Penjualan Baru
+                    </h2>
+                    
+                    <form class="sale-form" id="saleForm">
+                        <div class="form-group">
+                            <label for="menuItem">Menu Item</label>
+                            <select id="menuItem" class="form-control" required>
+                                <option value="">Pilih Menu...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="size">Ukuran</label>
+                            <select id="size" class="form-control">
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                                <option value="regular">Regular</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quantity">Jumlah</label>
+                            <input type="number" id="quantity" class="form-control" min="1" value="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="price">Harga</label>
+                            <input type="text" id="price" class="form-control" readonly>
+                        </div>
+                        
+                        <button type="submit" class="add-btn">
+                            <i class="fas fa-plus"></i> Tambah
+                        </button>
+                    </form>
+                    
+                    <!-- Diskon Section -->
+                    <div class="discount-section">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-tag" style="color: var(--info);"></i>
+                            <span style="font-weight: 600;">Diskon</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="discountType" class="form-control" style="flex: 1;">
+                                <option value="none">Tidak ada diskon</option>
+                                <option value="percentage">Persentase</option>
+                                <option value="fixed">Nominal</option>
+                            </select>
+                            <input type="number" id="discountValue" class="form-control" placeholder="Nilai" style="width: 100px;" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-section">
+                        <div class="cart-header">
+                            <h3 class="cart-title">Keranjang Penjualan</h3>
+                            <div class="cart-total">Total: <span id="cartTotal">Rp 0</span></div>
+                        </div>
+                        
+                        <div class="cart-items" id="cartItems">
+                            <div class="cart-empty">
+                                <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                                <p>Keranjang kosong</p>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-actions">
+                            <button class="add-btn" onclick="checkout()" style="flex: 1;">
+                                <i class="fas fa-check"></i> Checkout
+                            </button>
+                            <button class="chart-btn" onclick="clearCart()">
+                                <i class="fas fa-trash"></i> Kosongkan
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Riwayat Penjualan -->
+                <section class="history-card">
+                    <div class="history-header">
+                        <h2 class="history-title">
+                            <i class="fas fa-history"></i> Riwayat Penjualan
+                        </h2>
+                        
+                        <div class="history-filters">
+                            <button class="filter-btn active" onclick="filterHistory('all')">Semua</button>
+                            <button class="filter-btn" onclick="filterHistory('today')">Hari Ini</button>
+                            <button class="filter-btn" onclick="filterHistory('week')">Minggu Ini</button>
+                            <button class="filter-btn" onclick="filterHistory('month')">Bulan Ini</button>
+                        </div>
+                    </div>
+                    
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
+                                    <th>Item</th>
+                                    <th>Kategori</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
+                                    <th>User</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesHistory">
+                                <!-- Riwayat akan diisi dengan JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="history-actions">
+                        <button class="add-btn" onclick="exportData()" style="flex: 1;">
+                            <i class="fas fa-file-export"></i> Export Data
+                        </button>
+                        <button class="chart-btn" onclick="showSummary()">
+                            <i class="fas fa-chart-pie"></i> Ringkasan
+                        </button>
+                        <button class="chart-btn" onclick="generateReport()">
+                            <i class="fas fa-file-pdf"></i> Laporan
+                        </button>
+                        <button class="chart-btn" onclick="clearAllData()">
+                            <i class="fas fa-trash-alt"></i> Reset Data
+                        </button>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="dashboard-footer">
+            <p>&copy; 2024 METAMORF COFFEE - Dashboard Penjualan Harian</p>
+            <p style="margin-top: 8px; font-size: 0.8rem;">
+                <i class="fas fa-info-circle"></i> Data disimpan secara lokal di browser Anda
+            </p>
+        </footer>
+
+        <!-- Modal Ringkasan -->
+        <div class="modal" id="summaryModal">
+            <div class="modal-content">
+                <h2 class="modal-title">
+                    <i class="fas fa-chart-pie"></i> Ringkasan Penjualan
+                </h2>
+                
+                <div id="monthlySummary">
+                    <!-- Ringkasan akan diisi dengan JavaScript -->
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="add-btn" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Laporan -->
+        <div class="modal" id="reportModal">
+            <div class="modal-content">
+                <h2 class="modal-title">
+                    <i class="fas fa-file-pdf"></i> Buat Laporan
+                </h2>
+                
+                <div id="reportOptions">
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div>
+                            <label>Periode Laporan:</label>
+                            <select id="reportPeriod" class="form-control">
+                                <option value="today">Hari Ini</option>
+                                <option value="week">Minggu Ini</option>
+                                <option value="month">Bulan Ini</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        
+                        <div id="customDateRange" style="display: none;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label>Dari Tanggal:</label>
+                                    <input type="date" id="reportStartDate" class="form-control">
+                                </div>
+                                <div>
+                                    <label>Sampai Tanggal:</label>
+                                    <input type="date" id="reportEndDate" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label>User:</label>
+                            <select id="reportUser" class="form-control">
+                                <option value="all">Semua User</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label>Jenis Laporan:</label>
+                            <select id="reportType" class="form-control">
+                                <option value="summary">Ringkasan</option>
+                                <option value="detailed">Detail Transaksi</option>
+                                <option value="category">Berdasarkan Kategori</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center; display: flex; gap: 10px; justify-content: center;">
+                    <button class="add-btn" onclick="generateReportPDF()">
+                        <i class="fas fa-print"></i> Cetak Laporan
+                    </button>
+                    <button class="chart-btn" onclick="closeReportModal()">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Menu dengan stok
+        const menuData = {
+            coffee: [
+                { id: 1, name: "Americano", medium: 18000, large: 25000, category: "coffee", stock: 100, minStock: 20 },
+                { id: 2, name: "Espresso", regular: 16000, category: "coffee", stock: 80, minStock: 15 },
+                { id: 3, name: "Japanese", regular: 25000, category: "coffee", stock: 50, minStock: 10 },
+                { id: 4, name: "V60", regular: 25000, category: "coffee", stock: 40, minStock: 5 },
+                { id: 5, name: "Mocha", medium: 22000, large: 30000, category: "coffee", stock: 70, minStock: 15 },
+                { id: 6, name: "Caramel Macchiato", medium: 25000, large: 35000, category: "coffee", stock: 90, minStock: 20 },
+                { id: 7, name: "Sanger", medium: 20000, large: 30000, category: "coffee", stock: 60, minStock: 10 },
+                { id: 8, name: "Salted Caramel", medium: 20000, large: 30000, category: "coffee", stock: 55, minStock: 10 },
+                { id: 9, name: "Hazelnut Latte", medium: 22000, large: 30000, category: "coffee", stock: 75, minStock: 15 },
+                { id: 10, name: "Caramel Latte", medium: 20000, large: 30000, category: "coffee", stock: 85, minStock: 20 },
+                { id: 11, name: "Caffe Latte", medium: 20000, large: 30000, category: "coffee", stock: 100, minStock: 25 },
+                { id: 12, name: "Okinawa Latte", medium: 20000, large: 30000, category: "coffee", stock: 45, minStock: 8 },
+                { id: 13, name: "Butterscotch Latte", medium: 20000, large: 30000, category: "coffee", stock: 65, minStock: 12 },
+                { id: 14, name: "Brown Sugar Latte", medium: 22000, large: 30000, category: "coffee", stock: 70, minStock: 15 },
+                { id: 15, name: "Lime-presso", medium: 18000, large: 25000, category: "coffee", stock: 30, minStock: 5 }
+            ],
+            nonCoffee: [
+                { id: 16, name: "Kuwut Bali", regular: 16000, category: "non-coffee", stock: 60, minStock: 10 },
+                { id: 17, name: "Chocolate", regular: 18000, category: "non-coffee", stock: 80, minStock: 15 },
+                { id: 18, name: "Matcha", regular: 20000, category: "non-coffee", stock: 50, minStock: 10 },
+                { id: 19, name: "Red Velvet", regular: 16000, category: "non-coffee", stock: 40, minStock: 8 },
+                { id: 20, name: "Taro", regular: 16000, category: "non-coffee", stock: 35, minStock: 7 },
+                { id: 21, name: "Iced Tea", regular: 10000, category: "non-coffee", stock: 100, minStock: 20 }
+            ],
+            snack: [
+                { id: 22, name: "French Fries", regular: 15000, category: "snack", stock: 50, minStock: 10 },
+                { id: 23, name: "Roti Bakar", regular: 20000, category: "snack", stock: 40, minStock: 8 },
+                { id: 24, name: "Nugget", regular: 15000, category: "snack", stock: 60, minStock: 12 },
+                { id: 25, name: "Sosis", regular: 15000, category: "snack", stock: 45, minStock: 9 }
+            ]
+        };
+
+        // User credentials
+        const users = [
+            { username: "admin", password: "password123", name: "Administrator", role: "admin" },
+            { username: "kasir", password: "kasir123", name: "Kasir", role: "cashier" },
+            { username: "owner", password: "owner123", name: "Owner", role: "owner" }
+        ];
+
+        // Data penjualan (disimpan di localStorage dengan prefix username)
+        let salesData = [];
+        let cart = [];
+        let currentUser = null;
+        let currentViewUser = null; // Untuk admin melihat data user lain
+
+        // Chart instances
+        let salesChart = null;
+        let categoryChart = null;
+
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('metamorfCurrentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                initDashboard();
+            } else {
+                // Show login page
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('dashboardContainer').style.display = 'none';
+            }
+            
+            // Login form event
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Event listener untuk diskon
+            document.getElementById('discountType').addEventListener('change', function() {
+                const discountValue = document.getElementById('discountValue');
+                discountValue.disabled = this.value === 'none';
+                if (!discountValue.disabled) {
+                    discountValue.focus();
+                }
+            });
+            
+            // Event listener untuk laporan custom date
+            document.getElementById('reportPeriod').addEventListener('change', function() {
+                const customRange = document.getElementById('customDateRange');
+                customRange.style.display = this.value === 'custom' ? 'block' : 'none';
+            });
+        });
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorElement = document.getElementById('loginError');
+            
+            // Clear error
+            errorElement.textContent = '';
+            
+            // Find user
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // Login successful
+                currentUser = user;
+                localStorage.setItem('metamorfCurrentUser', JSON.stringify(user));
+                showNotification(`Selamat datang, ${user.name}!`, 'success');
+                initDashboard();
+            } else {
+                // Login failed
+                errorElement.textContent = 'Username atau password salah!';
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Yakin ingin logout?')) {
+                localStorage.removeItem('metamorfCurrentUser');
+                currentUser = null;
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('dashboardContainer').style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                showNotification('Berhasil logout', 'info');
+            }
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            // Hide login, show dashboard
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            
+            // Setup user switch untuk admin
+            setupUserSwitch();
+            
+            // Load data berdasarkan user/view
+            loadSalesData();
+            
+            // Update UI
+            initDate();
+            renderMenu();
+            renderSalesHistory();
+            updateStats();
+            updateCartDisplay();
+            initCharts();
+            updateUserInfo();
+            checkStockLevels();
+            
+            // Event listener untuk form penjualan
+            document.getElementById('saleForm').addEventListener('submit', addToCart);
+            document.getElementById('menuItem').addEventListener('change', updatePrice);
+            document.getElementById('size').addEventListener('change', updatePrice);
+            document.getElementById('quantity').addEventListener('input', updatePrice);
+            
+            // Update price on initial load
+            updatePrice();
+        }
+
+        // Setup user switch untuk admin
+        function setupUserSwitch() {
+            const userSwitch = document.getElementById('userSwitch');
+            const viewAsUser = document.getElementById('viewAsUser');
+            
+            if (currentUser.role === 'admin') {
+                userSwitch.style.display = 'flex';
+                
+                // Clear existing options
+                viewAsUser.innerHTML = '<option value="all">Semua User</option>';
+                
+                // Add user options
+                users.forEach(user => {
+                    if (user.username !== currentUser.username) {
+                        const option = document.createElement('option');
+                        option.value = user.username;
+                        option.textContent = user.name;
+                        viewAsUser.appendChild(option);
+                    }
+                });
+                
+                // Event listener untuk perubahan view
+                viewAsUser.addEventListener('change', function() {
+                    currentViewUser = this.value === 'all' ? null : this.value;
+                    loadSalesData();
+                    updateStats();
+                    updateCharts();
+                    renderSalesHistory();
+                    updateQuickStats();
+                    updateDataSourceLabel();
+                });
+            }
+        }
+
+        // Load sales data berdasarkan user/view
+        function loadSalesData() {
+            const userCartKey = `metamorfCart_${currentUser.username}`;
+            cart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+            
+            if (currentUser.role === 'admin' && currentViewUser) {
+                // Load data dari user tertentu
+                const userDataKey = `metamorfSales_${currentViewUser}`;
+                salesData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+                document.getElementById('dataSource').textContent = currentViewUser;
+            } else if (currentUser.role === 'admin' && currentViewUser === null) {
+                // Load data dari semua user
+                salesData = getAllUsersSalesData();
+                document.getElementById('dataSource').textContent = 'Semua User';
+            } else {
+                // Load data user saat ini
+                const userDataKey = `metamorfSales_${currentUser.username}`;
+                salesData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+                document.getElementById('dataSource').textContent = 'User saat ini';
+            }
+        }
+
+        // Get all users sales data
+        function getAllUsersSalesData() {
+            let allSalesData = [];
+            users.forEach(user => {
+                const userDataKey = `metamorfSales_${user.username}`;
+                const userData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+                allSalesData = allSalesData.concat(userData);
+            });
+            return allSalesData;
+        }
+
+        // Update data source label
+        function updateDataSourceLabel() {
+            if (currentUser.role === 'admin') {
+                if (currentViewUser === null) {
+                    document.getElementById('dataSource').textContent = 'Semua User';
+                    document.getElementById('totalRevenueLabel').textContent = 'Total Omset (Semua)';
+                } else {
+                    document.getElementById('dataSource').textContent = currentViewUser;
+                    document.getElementById('totalRevenueLabel').textContent = 'Total Omset';
+                }
+            }
+        }
+
+        // Update user info in header
+        function updateUserInfo() {
+            if (currentUser) {
+                document.getElementById('userAvatar').textContent = currentUser.name.charAt(0);
+            }
+        }
+
+        // Fungsi untuk tanggal
+        function initDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', options);
+        }
+
+        // Render menu dengan stok
+        function renderMenu() {
+            const coffeeMenu = document.getElementById('coffeeMenu');
+            const nonCoffeeMenu = document.getElementById('nonCoffeeMenu');
+            const snackMenu = document.getElementById('snackMenu');
+            const menuSelect = document.getElementById('menuItem');
+            
+            // Clear existing options
+            coffeeMenu.innerHTML = '';
+            nonCoffeeMenu.innerHTML = '';
+            snackMenu.innerHTML = '';
+            menuSelect.innerHTML = '<option value="">Pilih Menu...</option>';
+            
+            // Render coffee menu
+            menuData.coffee.forEach(item => {
+                const stockClass = getStockClass(item.stock, item.minStock);
+                const menuItem = document.createElement('div');
+                menuItem.className = `menu-item coffee ${stockClass}`;
+                menuItem.innerHTML = `
+                    <div class="item-name">${item.name} 
+                        <span style="font-size: 0.7rem; color: #666;">(Stok: ${item.stock})</span>
+                    </div>
+                    <div class="item-prices">
+                        ${item.medium ? `<span class="price-tag medium">M: Rp ${formatNumber(item.medium)}</span>` : ''}
+                        ${item.large ? `<span class="price-tag large">L: Rp ${formatNumber(item.large)}</span>` : ''}
+                        ${item.regular ? `<span class="price-tag medium">Rp ${formatNumber(item.regular)}</span>` : ''}
+                    </div>
+                `;
+                coffeeMenu.appendChild(menuItem);
+                
+                // Add to select options
+                const option = document.createElement('option');
+                option.value = JSON.stringify(item);
+                option.textContent = `☕ ${item.name} (${item.stock})`;
+                if (item.stock <= item.minStock) {
+                    option.style.color = '#C62828';
+                } else if (item.stock <= item.minStock * 2) {
+                    option.style.color = '#FF9800';
+                }
+                menuSelect.appendChild(option);
+            });
+            
+            // Render non-coffee menu
+            menuData.nonCoffee.forEach(item => {
+                const stockClass = getStockClass(item.stock, item.minStock);
+                const menuItem = document.createElement('div');
+                menuItem.className = `menu-item non-coffee ${stockClass}`;
+                menuItem.innerHTML = `
+                    <div class="item-name">${item.name} 
+                        <span style="font-size: 0.7rem; color: #666;">(Stok: ${item.stock})</span>
+                    </div>
+                    <div class="item-prices">
+                        <span class="price-tag medium">Rp ${formatNumber(item.regular)}</span>
+                    </div>
+                `;
+                nonCoffeeMenu.appendChild(menuItem);
+                
+                const option = document.createElement('option');
+                option.value = JSON.stringify(item);
+                option.textContent = `🥤 ${item.name} (${item.stock})`;
+                if (item.stock <= item.minStock) {
+                    option.style.color = '#C62828';
+                } else if (item.stock <= item.minStock * 2) {
+                    option.style.color = '#FF9800';
+                }
+                menuSelect.appendChild(option);
+            });
+            
+            // Render snack menu
+            menuData.snack.forEach(item => {
+                const stockClass = getStockClass(item.stock, item.minStock);
+                const menuItem = document.createElement('div');
+                menuItem.className = `menu-item snack ${stockClass}`;
+                menuItem.innerHTML = `
+                    <div class="item-name">${item.name} 
+                        <span style="font-size: 0.7rem; color: #666;">(Stok: ${item.stock})</span>
+                    </div>
+                    <div class="item-prices">
+                        <span class="price-tag medium">Rp ${formatNumber(item.regular)}</span>
+                    </div>
+                `;
+                snackMenu.appendChild(menuItem);
+                
+                const option = document.createElement('option');
+                option.value = JSON.stringify(item);
+                option.textContent = `🍟 ${item.name} (${item.stock})`;
+                if (item.stock <= item.minStock) {
+                    option.style.color = '#C62828';
+                } else if (item.stock <= item.minStock * 2) {
+                    option.style.color = '#FF9800';
+                }
+                menuSelect.appendChild(option);
+            });
+        }
+
+        // Helper function untuk menentukan class stok
+        function getStockClass(stock, minStock) {
+            if (stock <= minStock) return 'stock-low';
+            if (stock <= minStock * 2) return 'stock-warning';
+            return '';
+        }
+
+        // Check stock levels dan tampilkan notifikasi
+        function checkStockLevels() {
+            const stockNotifications = document.getElementById('stockNotifications');
+            let lowStockItems = [];
+            let warningStockItems = [];
+            
+            // Check semua item
+            [...menuData.coffee, ...menuData.nonCoffee, ...menuData.snack].forEach(item => {
+                if (item.stock <= item.minStock) {
+                    lowStockItems.push(item);
+                } else if (item.stock <= item.minStock * 2) {
+                    warningStockItems.push(item);
+                }
+            });
+            
+            stockNotifications.innerHTML = '';
+            
+            if (lowStockItems.length > 0) {
+                let notificationHTML = `
+                    <div class="menu-item stock-low">
+                        <div class="item-name">
+                            <i class="fas fa-exclamation-triangle"></i> Stok Rendah!
+                        </div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">
+                `;
+                
+                lowStockItems.forEach(item => {
+                    notificationHTML += `<div>${item.name}: ${item.stock} unit</div>`;
+                });
+                
+                notificationHTML += `</div></div>`;
+                stockNotifications.innerHTML += notificationHTML;
+            }
+            
+            if (warningStockItems.length > 0) {
+                let notificationHTML = `
+                    <div class="menu-item stock-warning">
+                        <div class="item-name">
+                            <i class="fas fa-exclamation-circle"></i> Stok Menipis
+                        </div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">
+                `;
+                
+                warningStockItems.forEach(item => {
+                    notificationHTML += `<div>${item.name}: ${item.stock} unit</div>`;
+                });
+                
+                notificationHTML += `</div></div>`;
+                stockNotifications.innerHTML += notificationHTML;
+            }
+        }
+
+        // Update harga berdasarkan pilihan
+        function updatePrice() {
+            const itemSelect = document.getElementById('menuItem');
+            const sizeSelect = document.getElementById('size');
+            const quantityInput = document.getElementById('quantity');
+            const priceInput = document.getElementById('price');
+            
+            if (!itemSelect.value) {
+                priceInput.value = 'Rp 0';
+                return;
+            }
+            
+            const item = JSON.parse(itemSelect.value);
+            const size = sizeSelect.value;
+            const quantity = parseInt(quantityInput.value) || 1;
+            
+            let price = 0;
+            if (size === 'medium' && item.medium) {
+                price = item.medium;
+            } else if (size === 'large' && item.large) {
+                price = item.large;
+            } else if (item.regular) {
+                price = item.regular;
+            } else if (item.medium) {
+                price = item.medium;
+            }
+            
+            const total = price * quantity;
+            priceInput.value = `Rp ${formatNumber(total)}`;
+        }
+
+        // Tambah ke keranjang dengan cek stok
+        function addToCart(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const itemSelect = document.getElementById('menuItem');
+            const sizeSelect = document.getElementById('size');
+            const quantityInput = document.getElementById('quantity');
+            
+            if (!itemSelect.value) {
+                showNotification('Pilih menu terlebih dahulu!', 'error');
+                return;
+            }
+            
+            const item = JSON.parse(itemSelect.value);
+            const size = sizeSelect.value;
+            const quantity = parseInt(quantityInput.value) || 1;
+            
+            if (quantity < 1) {
+                showNotification('Jumlah harus minimal 1!', 'error');
+                return;
+            }
+            
+            // Cek stok
+            if (quantity > item.stock) {
+                showNotification(`Stok ${item.name} tidak mencukupi! Stok tersedia: ${item.stock}`, 'error');
+                return;
+            }
+            
+            let price = 0;
+            if (size === 'medium' && item.medium) {
+                price = item.medium;
+            } else if (size === 'large' && item.large) {
+                price = item.large;
+            } else if (item.regular) {
+                price = item.regular;
+            } else if (item.medium) {
+                price = item.medium;
+            }
+            
+            const cartItem = {
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                size: size,
+                quantity: quantity,
+                price: price,
+                total: price * quantity,
+                timestamp: new Date().toISOString()
+            };
+            
+            cart.push(cartItem);
+            
+            // Save cart with user prefix
+            const userCartKey = `metamorfCart_${currentUser.username}`;
+            localStorage.setItem(userCartKey, JSON.stringify(cart));
+            
+            updateCartDisplay();
+            
+            // Reset form
+            itemSelect.value = '';
+            sizeSelect.value = 'medium';
+            quantityInput.value = '1';
+            updatePrice();
+            
+            showNotification(`${item.name} ditambahkan ke keranjang!`, 'success');
+        }
+
+        // Update tampilan keranjang dengan diskon
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>Keranjang kosong</p>
+                    </div>
+                `;
+                cartTotal.textContent = 'Rp 0';
+                return;
+            }
+            
+            let subtotal = 0;
+            let itemsHTML = '';
+            
+            cart.forEach((item, index) => {
+                subtotal += item.total;
+                
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-details">
+                                ${item.size !== 'regular' ? item.size + ' • ' : ''}${item.quantity} × Rp ${formatNumber(item.price)}
+                            </div>
+                        </div>
+                        <div>
+                            <span style="font-weight: 600; margin-right: 10px;">Rp ${formatNumber(item.total)}</span>
+                            <button class="cart-item-remove" onclick="removeFromCart(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Apply discount
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            let total = subtotal;
+            let discountText = '';
+            
+            if (discountType === 'percentage' && discountValue > 0) {
+                const discountAmount = (subtotal * discountValue) / 100;
+                total = subtotal - discountAmount;
+                discountText = ` (Diskon ${discountValue}%: -Rp ${formatNumber(discountAmount)})`;
+            } else if (discountType === 'fixed' && discountValue > 0) {
+                total = subtotal - discountValue;
+                discountText = ` (Diskon: -Rp ${formatNumber(discountValue)})`;
+            }
+            
+            cartItems.innerHTML = itemsHTML;
+            cartTotal.textContent = `Rp ${formatNumber(total)}${discountText}`;
+        }
+
+        // Hapus dari keranjang
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            
+            // Save cart with user prefix
+            const userCartKey = `metamorfCart_${currentUser.username}`;
+            localStorage.setItem(userCartKey, JSON.stringify(cart));
+            
+            updateCartDisplay();
+            showNotification('Item dihapus dari keranjang', 'info');
+        }
+
+        // Kosongkan keranjang
+        function clearCart() {
+            if (cart.length === 0) return;
+            
+            if (confirm('Kosongkan keranjang?')) {
+                cart = [];
+                
+                // Save cart with user prefix
+                const userCartKey = `metamorfCart_${currentUser.username}`;
+                localStorage.setItem(userCartKey, JSON.stringify(cart));
+                
+                // Reset discount
+                document.getElementById('discountType').value = 'none';
+                document.getElementById('discountValue').value = '';
+                document.getElementById('discountValue').disabled = true;
+                
+                updateCartDisplay();
+                showNotification('Keranjang dikosongkan!', 'info');
+            }
+        }
+
+        // Checkout dengan diskon dan update stok
+        function checkout() {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                showNotification('Keranjang kosong!', 'error');
+                return;
+            }
+            
+            // Calculate discount
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+            let subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+            let discountAmount = 0;
+            
+            if (discountType === 'percentage' && discountValue > 0) {
+                discountAmount = (subtotal * discountValue) / 100;
+            } else if (discountType === 'fixed' && discountValue > 0) {
+                discountAmount = discountValue;
+            }
+            
+            const total = subtotal - discountAmount;
+            
+            const now = new Date();
+            const transaction = {
+                id: Date.now(),
+                items: [...cart],
+                subtotal: subtotal,
+                discount: discountAmount,
+                total: total,
+                date: now.toISOString().split('T')[0],
+                time: now.toTimeString().split(' ')[0].substring(0, 5),
+                timestamp: now.toISOString(),
+                user: currentUser.username
+            };
+            
+            // Update stock
+            cart.forEach(cartItem => {
+                const item = findMenuItem(cartItem.id);
+                if (item) {
+                    item.stock -= cartItem.quantity;
+                }
+            });
+            
+            // Save updated menu data
+            saveMenuData();
+            
+            // Tambah ke sales data
+            salesData.push(transaction);
+            
+            // Save sales data with user prefix
+            const userDataKey = `metamorfSales_${currentUser.username}`;
+            localStorage.setItem(userDataKey, JSON.stringify(salesData));
+            
+            // Kosongkan keranjang
+            cart = [];
+            const userCartKey = `metamorfCart_${currentUser.username}`;
+            localStorage.setItem(userCartKey, JSON.stringify(cart));
+            
+            // Reset discount
+            document.getElementById('discountType').value = 'none';
+            document.getElementById('discountValue').value = '';
+            document.getElementById('discountValue').disabled = true;
+            
+            // Update tampilan
+            updateCartDisplay();
+            renderMenu();
+            renderSalesHistory();
+            updateStats();
+            updateCharts();
+            updateQuickStats();
+            checkStockLevels();
+            
+            showNotification(`Checkout berhasil! Total: Rp ${formatNumber(transaction.total)}`, 'success');
+        }
+
+        // Helper function untuk menemukan item menu
+        function findMenuItem(id) {
+            for (const category in menuData) {
+                const item = menuData[category].find(i => i.id === id);
+                if (item) return item;
+            }
+            return null;
+        }
+
+        // Save menu data to localStorage
+        function saveMenuData() {
+            localStorage.setItem('metamorfMenuData', JSON.stringify(menuData));
+        }
+
+        // Render riwayat penjualan
+        function renderSalesHistory(filter = 'all') {
+            const historyBody = document.getElementById('salesHistory');
+            
+            // Filter data
+            let filteredData = [...salesData];
+            const now = new Date();
+            
+            if (filter === 'today') {
+                const today = now.toISOString().split('T')[0];
+                filteredData = salesData.filter(sale => sale.date === today);
+            } else if (filter === 'week') {
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                filteredData = salesData.filter(sale => new Date(sale.timestamp) > weekAgo);
+            } else if (filter === 'month') {
+                const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                filteredData = salesData.filter(sale => new Date(sale.timestamp) > monthAgo);
+            }
+            
+            // Sort by date (newest first)
+            filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            if (filteredData.length === 0) {
+                historyBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 30px; color: #999;">
+                            <i class="fas fa-history" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
+                            <p>Tidak ada data penjualan</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let historyHTML = '';
+            
+            filteredData.forEach(transaction => {
+                // Format tanggal
+                const date = new Date(transaction.date);
+                const dateStr = date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                
+                // Tambah setiap item dalam transaksi
+                transaction.items.forEach((item, index) => {
+                    const badgeClass = `badge-${item.category}`;
+                    const categoryLabel = item.category === 'coffee' ? 'Coffee' : 
+                                        item.category === 'non-coffee' ? 'Non-Coffee' : 'Snack';
+                    
+                    historyHTML += `
+                        <tr>
+                            ${index === 0 ? `<td>${dateStr}</td>` : '<td></td>'}
+                            ${index === 0 ? `<td>${transaction.time}</td>` : '<td></td>'}
+                            <td>${item.name} ${item.size !== 'regular' ? `(${item.size})` : ''}</td>
+                            <td><span class="item-badge ${badgeClass}">${categoryLabel}</span></td>
+                            <td>${item.quantity}</td>
+                            <td>Rp ${formatNumber(item.total)}</td>
+                            ${index === 0 ? `<td>${transaction.user}</td>` : '<td></td>'}
+                            ${index === 0 ? `<td>
+                                <button class="delete-btn" onclick="deleteTransaction(${transaction.id}, '${transaction.user}')" title="Hapus transaksi">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>` : '<td></td>'}
+                        </tr>
+                    `;
+                });
+                
+                // Add discount row if applicable
+                if (transaction.discount > 0) {
+                    historyHTML += `
+                        <tr style="background: #f0f8ff;">
+                            <td colspan="5" style="text-align: right; font-weight: 600;">Diskon:</td>
+                            <td>-Rp ${formatNumber(transaction.discount)}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr style="background: #f0f8ff;">
+                            <td colspan="5" style="text-align: right; font-weight: 600;">Total:</td>
+                            <td>Rp ${formatNumber(transaction.total)}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    `;
+                }
+            });
+            
+            historyBody.innerHTML = historyHTML;
+        }
+
+        // Filter riwayat
+        function filterHistory(filter) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderSalesHistory(filter);
+        }
+
+        // Hapus transaksi dengan parameter user
+        function deleteTransaction(transactionId, transactionUser) {
+            if (!confirm('Hapus transaksi ini?')) return;
+            
+            // If admin, need to know which user's data to modify
+            if (currentUser.role === 'admin') {
+                if (currentViewUser === null || currentViewUser === 'all') {
+                    // Need to find which user this transaction belongs to
+                    let found = false;
+                    for (const user of users) {
+                        const userDataKey = `metamorfSales_${user.username}`;
+                        let userSalesData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+                        const initialLength = userSalesData.length;
+                        userSalesData = userSalesData.filter(sale => sale.id !== transactionId);
+                        
+                        if (userSalesData.length < initialLength) {
+                            localStorage.setItem(userDataKey, JSON.stringify(userSalesData));
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!found) {
+                        showNotification('Transaksi tidak ditemukan!', 'error');
+                        return;
+                    }
+                } else {
+                    // Modify specific user's data
+                    const userDataKey = `metamorfSales_${currentViewUser}`;
+                    let userSalesData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+                    userSalesData = userSalesData.filter(sale => sale.id !== transactionId);
+                    localStorage.setItem(userDataKey, JSON.stringify(userSalesData));
+                }
+                
+                // Reload all data
+                loadSalesData();
+            } else {
+                // Regular user
+                salesData = salesData.filter(sale => sale.id !== transactionId);
+                const userDataKey = `metamorfSales_${currentUser.username}`;
+                localStorage.setItem(userDataKey, JSON.stringify(salesData));
+            }
+            
+            renderSalesHistory();
+            updateStats();
+            updateCharts();
+            updateQuickStats();
+            
+            showNotification('Transaksi dihapus!', 'info');
+        }
+
+        // Update statistik
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Hitung total omset
+            const totalRevenue = salesData.reduce((sum, sale) => sum + sale.total, 0);
+            document.getElementById('totalRevenue').textContent = `Rp ${formatNumber(totalRevenue)}`;
+            
+            // Omset hari ini
+            const todaySales = salesData.filter(sale => sale.date === today);
+            const todayRevenue = todaySales.reduce((sum, sale) => sum + sale.total, 0);
+            document.getElementById('todayRevenue').textContent = `Rp ${formatNumber(todayRevenue)}`;
+            
+            // Rata-rata harian
+            const uniqueDates = [...new Set(salesData.map(sale => sale.date))];
+            const avgDaily = uniqueDates.length > 0 ? totalRevenue / uniqueDates.length : 0;
+            document.getElementById('avgDaily').textContent = `Rp ${formatNumber(Math.round(avgDaily))}`;
+            
+            // Jumlah transaksi hari ini
+            const transactionCount = todaySales.length;
+            document.getElementById('transactionCount').textContent = transactionCount;
+            
+            // Update quick stats
+            updateQuickStats();
+        }
+
+        // Update quick stats in sidebar
+        function updateQuickStats() {
+            // Total transactions
+            document.getElementById('totalTransactions').textContent = salesData.length;
+            
+            // Popular item
+            const itemCount = {};
+            salesData.forEach(sale => {
+                sale.items.forEach(item => {
+                    if (!itemCount[item.name]) {
+                        itemCount[item.name] = 0;
+                    }
+                    itemCount[item.name] += item.quantity;
+                });
+            });
+            
+            let popularItem = '-';
+            let maxCount = 0;
+            for (const [item, count] of Object.entries(itemCount)) {
+                if (count > maxCount) {
+                    maxCount = count;
+                    popularItem = item;
+                }
+            }
+            
+            document.getElementById('popularItem').textContent = popularItem;
+            
+            // Average transaction value
+            const avgTransaction = salesData.length > 0 ? 
+                salesData.reduce((sum, sale) => sum + sale.total, 0) / salesData.length : 0;
+            document.getElementById('avgTransaction').textContent = `Rp ${formatNumber(Math.round(avgTransaction))}`;
+        }
+
+        // Inisialisasi charts
+        function initCharts() {
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            
+            // Chart penjualan 7 hari terakhir
+            const { labels, data } = getLast7DaysData();
+            
+            salesChart = new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Omset (Rp)',
+                        data: data,
+                        backgroundColor: 'rgba(139, 69, 19, 0.7)',
+                        borderColor: 'rgb(139, 69, 19)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + formatNumber(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Chart kategori - PERBAIKAN: Data non-coffee sekarang dimasukkan
+            const categoryData = getCategoryData();
+            
+            categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Coffee', 'Non-Coffee', 'Snack'],
+                    datasets: [{
+                        data: [
+                            categoryData.coffee || 0, 
+                            categoryData.nonCoffee || 0, 
+                            categoryData.snack || 0
+                        ],
+                        backgroundColor: [
+                            'rgba(111, 78, 55, 0.8)',
+                            'rgba(76, 175, 80, 0.8)',
+                            'rgba(255, 152, 0, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(111, 78, 55)',
+                            'rgb(76, 175, 80)',
+                            'rgb(255, 152, 0)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: Rp ${formatNumber(value)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts
+        function updateCharts() {
+            // Update sales chart
+            const { labels, data } = getLast7DaysData();
+            salesChart.data.labels = labels;
+            salesChart.data.datasets[0].data = data;
+            salesChart.update();
+            
+            // Update category chart - PERBAIKAN: Data non-coffee sekarang dimasukkan
+            const categoryData = getCategoryData();
+            categoryChart.data.datasets[0].data = [
+                categoryData.coffee || 0, 
+                categoryData.nonCoffee || 0, 
+                categoryData.snack || 0
+            ];
+            categoryChart.update();
+        }
+
+        // Get data for last 7 days
+        function getLast7DaysData() {
+            const labels = [];
+            const data = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // Format label
+                const label = date.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' });
+                labels.push(label);
+                
+                // Calculate revenue for this day
+                const dayRevenue = salesData
+                    .filter(sale => sale.date === dateStr)
+                    .reduce((sum, sale) => sum + sale.total, 0);
+                
+                data.push(dayRevenue);
+            }
+            
+            return { labels, data };
+        }
+
+        // Get category data - PERBAIKAN: Sekarang menghitung semua kategori termasuk non-coffee
+        function getCategoryData() {
+            const categoryData = { coffee: 0, nonCoffee: 0, snack: 0 };
+            
+            salesData.forEach(sale => {
+                sale.items.forEach(item => {
+                    // PERBAIKAN: Pastikan kategori non-coffee dihitung
+                    if (item.category === 'non-coffee') {
+                        categoryData.nonCoffee += item.total;
+                    } else if (item.category === 'coffee') {
+                        categoryData.coffee += item.total;
+                    } else if (item.category === 'snack') {
+                        categoryData.snack += item.total;
+                    }
+                });
+            });
+            
+            return categoryData;
+        }
+
+        // Change chart period
+        function changeChartPeriod(period) {
+            // For now, just update the 7-day chart
+            updateCharts();
+            showNotification(`Menampilkan data ${period === 'week' ? '7 hari' : '30 hari'} terakhir`, 'info');
+        }
+
+        // Change chart type
+        function changeChartType(type) {
+            categoryChart.config.type = type;
+            categoryChart.update();
+            showNotification(`Grafik diubah ke tipe ${type === 'doughnut' ? 'donat' : 'pie'}`, 'info');
+        }
+
+        // Show summary modal
+        function showSummary() {
+            const modal = document.getElementById('summaryModal');
+            const summaryContent = document.getElementById('monthlySummary');
+            
+            // Get current month data
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const monthData = salesData.filter(sale => {
+                const saleDate = new Date(sale.date);
+                return saleDate.getMonth() === currentMonth && saleDate.getFullYear() === currentYear;
+            });
+            
+            // Calculate summary
+            const totalRevenue = monthData.reduce((sum, sale) => sum + sale.total, 0);
+            const totalTransactions = monthData.length;
+            const avgTransaction = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+            
+            // Get category breakdown
+            const categoryBreakdown = { coffee: 0, nonCoffee: 0, snack: 0 };
+            monthData.forEach(sale => {
+                sale.items.forEach(item => {
+                    if (item.category === 'coffee') {
+                        categoryBreakdown.coffee += item.total;
+                    } else if (item.category === 'non-coffee') {
+                        categoryBreakdown.nonCoffee += item.total;
+                    } else if (item.category === 'snack') {
+                        categoryBreakdown.snack += item.total;
+                    }
+                });
+            });
+            
+            // Get top items
+            const itemCount = {};
+            monthData.forEach(sale => {
+                sale.items.forEach(item => {
+                    if (!itemCount[item.name]) {
+                        itemCount[item.name] = 0;
+                    }
+                    itemCount[item.name] += item.quantity;
+                });
+            });
+            
+            const topItems = Object.entries(itemCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            // Generate summary HTML
+            let summaryHTML = `
+                <div class="summary-item">
+                    <span>Total Omset Bulan Ini:</span>
+                    <strong>Rp ${formatNumber(totalRevenue)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Jumlah Transaksi:</span>
+                    <strong>${totalTransactions}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Rata-rata per Transaksi:</span>
+                    <strong>Rp ${formatNumber(Math.round(avgTransaction))}</strong>
+                </div>
+                <div style="margin-top: 15px; font-weight: 600; color: var(--primary);">Breakdown Kategori:</div>
+                <div class="summary-item">
+                    <span>Coffee:</span>
+                    <strong>Rp ${formatNumber(categoryBreakdown.coffee)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Non-Coffee:</span>
+                    <strong>Rp ${formatNumber(categoryBreakdown.nonCoffee)}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Snack:</span>
+                    <strong>Rp ${formatNumber(categoryBreakdown.snack)}</strong>
+                </div>
+            `;
+            
+            if (topItems.length > 0) {
+                summaryHTML += `<div style="margin-top: 15px; font-weight: 600; color: var(--primary);">Menu Terpopuler:</div>`;
+                
+                topItems.forEach(([item, count]) => {
+                    summaryHTML += `
+                        <div class="summary-item">
+                            <span>${item}:</span>
+                            <strong>${count} terjual</strong>
+                        </div>
+                    `;
+                });
+            }
+            
+            summaryContent.innerHTML = summaryHTML;
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('summaryModal').classList.remove('active');
+        }
+
+        // Generate report modal
+        function generateReport() {
+            const modal = document.getElementById('reportModal');
+            const reportUser = document.getElementById('reportUser');
+            
+            // Clear existing options
+            reportUser.innerHTML = '<option value="all">Semua User</option>';
+            
+            // Add user options
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.username;
+                option.textContent = user.name;
+                reportUser.appendChild(option);
+            });
+            
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            document.getElementById('reportStartDate').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('reportEndDate').value = today;
+            
+            modal.classList.add('active');
+        }
+
+        // Close report modal
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.remove('active');
+        }
+
+        // Generate PDF report
+        function generateReportPDF() {
+            const period = document.getElementById('reportPeriod').value;
+            const reportUser = document.getElementById('reportUser').value;
+            const reportType = document.getElementById('reportType').value;
+            
+            let startDate, endDate;
+            const today = new Date();
+            
+            if (period === 'custom') {
+                startDate = new Date(document.getElementById('reportStartDate').value);
+                endDate = new Date(document.getElementById('reportEndDate').value);
+            } else if (period === 'week') {
+                startDate = new Date(today);
+                startDate.setDate(startDate.getDate() - 7);
+                endDate = today;
+            } else if (period === 'month') {
+                startDate = new Date(today);
+                startDate.setMonth(startDate.getMonth() - 1);
+                endDate = today;
+            } else { // today
+                startDate = today;
+                endDate = today;
+            }
+            
+            // Get data based on user selection
+            let reportData = [];
+            if (reportUser === 'all') {
+                reportData = getAllUsersSalesData();
+            } else {
+                const userDataKey = `metamorfSales_${reportUser}`;
+                reportData = JSON.parse(localStorage.getItem(userDataKey)) || [];
+            }
+            
+            // Filter by date
+            reportData = reportData.filter(sale => {
+                const saleDate = new Date(sale.date);
+                return saleDate >= startDate && saleDate <= endDate;
+            });
+            
+            // Generate report content
+            let reportContent = `LAPORAN PENJUALAN METAMORF COFFEE\n`;
+            reportContent += `Periode: ${startDate.toLocaleDateString('id-ID')} - ${endDate.toLocaleDateString('id-ID')}\n`;
+            reportContent += `User: ${reportUser === 'all' ? 'Semua User' : reportUser}\n`;
+            reportContent += `Jenis Laporan: ${reportType === 'summary' ? 'Ringkasan' : reportType === 'detailed' ? 'Detail' : 'Kategori'}\n`;
+            reportContent += `Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}\n\n`;
+            
+            if (reportType === 'summary') {
+                const totalRevenue = reportData.reduce((sum, sale) => sum + sale.total, 0);
+                const totalTransactions = reportData.length;
+                const avgTransaction = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+                
+                reportContent += `TOTAL OM SET: Rp ${formatNumber(totalRevenue)}\n`;
+                reportContent += `JUMLAH TRANSAKSI: ${totalTransactions}\n`;
+                reportContent += `RATA-RATA TRANSAKSI: Rp ${formatNumber(Math.round(avgTransaction))}\n`;
+            } else if (reportType === 'detailed') {
+                reportContent += `DETAIL TRANSAKSI:\n`;
+                reportContent += `Tanggal | Waktu | Item | Kategori | Jumlah | Total\n`;
+                reportContent += `------------------------------------------------------\n`;
+                
+                reportData.forEach(sale => {
+                    sale.items.forEach(item => {
+                        reportContent += `${sale.date} | ${sale.time} | ${item.name} | ${item.category} | ${item.quantity} | Rp ${formatNumber(item.total)}\n`;
+                    });
+                });
+            } else if (reportType === 'category') {
+                const categoryBreakdown = { coffee: 0, nonCoffee: 0, snack: 0 };
+                reportData.forEach(sale => {
+                    sale.items.forEach(item => {
+                        if (item.category === 'coffee') {
+                            categoryBreakdown.coffee += item.total;
+                        } else if (item.category === 'non-coffee') {
+                            categoryBreakdown.nonCoffee += item.total;
+                        } else if (item.category === 'snack') {
+                            categoryBreakdown.snack += item.total;
+                        }
+                    });
+                });
+                
+                const total = categoryBreakdown.coffee + categoryBreakdown.nonCoffee + categoryBreakdown.snack;
+                
+                reportContent += `BREAKDOWN KATEGORI:\n`;
+                reportContent += `Coffee: Rp ${formatNumber(categoryBreakdown.coffee)} (${Math.round((categoryBreakdown.coffee/total)*100)}%)\n`;
+                reportContent += `Non-Coffee: Rp ${formatNumber(categoryBreakdown.nonCoffee)} (${Math.round((categoryBreakdown.nonCoffee/total)*100)}%)\n`;
+                reportContent += `Snack: Rp ${formatNumber(categoryBreakdown.snack)} (${Math.round((categoryBreakdown.snack/total)*100)}%)\n`;
+            }
+            
+            // Create download link
+            const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `laporan_metamorf_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            closeReportModal();
+            showNotification('Laporan berhasil dihasilkan!', 'success');
+        }
+
+        // Export data
+        function exportData() {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (salesData.length === 0) {
+                showNotification('Tidak ada data untuk diexport!', 'error');
+                return;
+            }
+            
+            // Convert to CSV
+            let csv = 'Tanggal,Waktu,Item,Kategori,Ukuran,Jumlah,Harga,Total,User,Subtotal,Discount,Total\n';
+            
+            salesData.forEach(sale => {
+                sale.items.forEach(item => {
+                    csv += `${sale.date},${sale.time},${item.name},${item.category},${item.size},${item.quantity},${item.price},${item.total},${sale.user},${sale.subtotal},${sale.discount},${sale.total}\n`;
+                });
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `metamorf_sales_${currentViewUser || currentUser.username}_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showNotification('Data berhasil diexport!', 'success');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (!currentUser) {
+                showNotification('Silakan login terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (salesData.length === 0 && cart.length === 0) {
+                showNotification('Tidak ada data untuk direset', 'info');
+                return;
+            }
+            
+            if (confirm('Yakin ingin menghapus semua data penjualan? Tindakan ini tidak dapat dibatalkan!')) {
+                if (currentUser.role === 'admin' && currentViewUser === null) {
+                    // Clear all users data
+                    users.forEach(user => {
+                        const userDataKey = `metamorfSales_${user.username}`;
+                        const userCartKey = `metamorfCart_${user.username}`;
+                        localStorage.removeItem(userDataKey);
+                        localStorage.removeItem(userCartKey);
+                    });
+                } else if (currentUser.role === 'admin' && currentViewUser) {
+                    // Clear specific user data
+                    const userDataKey = `metamorfSales_${currentViewUser}`;
+                    const userCartKey = `metamorfCart_${currentViewUser}`;
+                    localStorage.removeItem(userDataKey);
+                    localStorage.removeItem(userCartKey);
+                } else {
+                    // Clear current user data
+                    const userDataKey = `metamorfSales_${currentUser.username}`;
+                    const userCartKey = `metamorfCart_${currentUser.username}`;
+                    localStorage.removeItem(userDataKey);
+                    localStorage.removeItem(userCartKey);
+                }
+                
+                // Reload data
+                loadSalesData();
+                cart = [];
+                
+                renderSalesHistory();
+                updateStats();
+                updateCartDisplay();
+                updateCharts();
+                updateQuickStats();
+                
+                showNotification('Semua data berhasil direset!', 'success');
+            }
+        }
+
+        // Helper functions
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function showNotification(message, type = 'info') {
+            // Remove existing notification
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            // Set icon based on type
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

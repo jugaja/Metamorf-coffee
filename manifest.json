@@ -1,0 +1,16 @@
+{
+  "name": "METAMORF COFFEE",
+  "short_name": "Metamorf",
+  "description": "Dashboard Penjualan Coffeeshop",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9F5F0",
+  "theme_color": "#8B4513",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
